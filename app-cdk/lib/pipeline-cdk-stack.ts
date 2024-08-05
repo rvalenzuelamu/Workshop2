@@ -46,7 +46,7 @@ export class MyPipelineStack extends cdk.Stack {
           owner: 'rvalenzuelamu', // Nombre de la organización
           repo: 'Workshop2',
           branch: 'main', // o la rama que prefieras
-          connectionArn: "arn:aws:codeconnections:us-east-1:008971640899:connection/5d0b1354-c943-4383-844f-fe624e65705f",
+          connectionArn: "arn:aws:codeconnections:us-east-1:008971640899:connection/32f5ba7a-088c-4f78-a776-cfec4ce9f92c",
           output: sourceOutput,
         }),
       ],
