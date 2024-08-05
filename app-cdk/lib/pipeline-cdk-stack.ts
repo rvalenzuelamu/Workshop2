@@ -87,7 +87,7 @@ export class MyPipelineStack extends Stack {
     //Agregando Parametro AWS SSM
     const signerARNParameter = new ssm.StringParameter(this, 'SignerARNParam', {
       parameterName: 'signer-profile-arn',
-      stringValue: 'arn:aws:signer:us-east-1:008971640899:/signing-profiles/ecr_signing_profile/Efpza8FvVS',
+      stringValue: 'arn:aws:signer:us-east-1:008971640899:/signing-profiles/ecr_signing_profile',
     });
 
     const signerParameterPolicy = new iam.PolicyStatement({
