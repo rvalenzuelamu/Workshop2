@@ -7,6 +7,8 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { Construct } from 'constructs';
 import * as ecr from 'aws-cdk-lib/aws-ecr';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
+
 
 
 interface ConsumerProps extends StackProps {
@@ -81,6 +83,31 @@ export class MyPipelineStack extends Stack {
     });
 
     dockerBuild.addToRolePolicy(dockerBuildRolePolicy);
+
+    //Agregando Parametro AWS SSM
+    const signerARNParameter = new ssm.StringParameter(this, 'SignerARNParam', {
+      parameterName: 'signer-profile-arn',
+      stringValue: 'arn:aws:signer:us-east-1:008971640899:/signing-profiles/ecr_signing_profile/Efpza8FvVS',
+    });
+
+    const signerParameterPolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [signerARNParameter.parameterArn],
+      actions: ['ssm:GetParametersByPath', 'ssm:GetParameters'],
+    });
+
+    const signerPolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: ['*'],
+      actions: [
+        'signer:PutSigningProfile',
+        'signer:SignPayload',
+        'signer:GetRevocationStatus',
+      ],
+    });
+
+    dockerBuild.addToRolePolicy(signerParameterPolicy);
+    dockerBuild.addToRolePolicy(signerPolicy);
 
     // Agrega la etapa de origen con GitHub
     pipeline.addStage({
